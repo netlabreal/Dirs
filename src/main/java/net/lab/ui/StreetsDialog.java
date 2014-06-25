@@ -86,6 +86,7 @@ public class StreetsDialog extends JDialog {
                 }
                 if(Param==2){
                     try {
+                        street.setName(str_txt.getText());
                         Factory.getInstance().getStreetsDao().updateStreet(street);
                     } catch (SQLException e1) {
                         e1.printStackTrace();
