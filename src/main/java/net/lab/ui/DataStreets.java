@@ -114,11 +114,28 @@ public class DataStreets extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 double f = getBounds().getCenterX();
                 int x = (getWidth()/2)-150;	int y = (getHeight()/2)-25;
-                StreetsDialog sd = new StreetsDialog(x,y,300,50,"Добавить запись",dds);
+                StreetsDialog sd = new StreetsDialog(x,y,520,130,"Добавить запись",dds);
+                sd.Param = 1;
                 sd.setModal(true); sd.setVisible(true);
 
             }
         });
+        b_izm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double f = getBounds().getCenterX();
+                    int x = (getWidth()/2)-150;	int y = (getHeight()/2)-25;
+                    StreetsDialog sd = new StreetsDialog(x,y,520,130,"Добавить запись",dds);
+                    Integer ff = (Integer)tt.getModel().getValueAt(selectedRow,0);
+                    Streets st1 = Factory.getInstance().getStreetsDao().getStreetById(ff);
+                    sd.Param = 2;sd.street = st1;sd.str_txt.setText(Factory.getInstance().getStreetsDao().getStreetById(ff).getName());
+                    sd.setModal(true); sd.setVisible(true);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+    }
+});
 
         p_b.add(b_add);p_b.add(b_izm);p_b.add(b_del);
         add(p_b,BorderLayout.NORTH);

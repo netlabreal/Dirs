@@ -11,8 +11,38 @@ import java.util.List;
 public class StreetsDaoImplementation implements StreetsDao {
     @Override
     public void addStreet(Streets s) throws SQLException {
-
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            session.save(s);
+            session.getTransaction().commit();
+        }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR I/O", JOptionPane.OK_OPTION);
+        }
+        finally {
+            if(session!=null && session.isOpen()){session.close();}
+        }
     }
+
+    @Override
+    public void updateStreet(Streets s) throws SQLException {
+        Session session = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.beginTransaction();
+            session.update(s);
+            session.getTransaction().commit();
+        }
+        catch (Exception e){
+            JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR I/O", JOptionPane.OK_OPTION);
+        }
+        finally {
+            if(session!=null && session.isOpen()){session.close();}
+        }
+    }
+
     @Override
     public void delStreet(Streets s) throws SQLException {
     Session session = null;
@@ -22,7 +52,7 @@ public class StreetsDaoImplementation implements StreetsDao {
             session.delete(s);
             session.getTransaction().commit();
         }
-        catch (Exception e){}
+        catch (Exception e){JOptionPane.showMessageDialog(null, e.getMessage(), "ERROR I/O", JOptionPane.OK_OPTION);}
         finally {
             if(session!=null && session.isOpen()){session.close();}
         }
