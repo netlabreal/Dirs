@@ -17,7 +17,9 @@ public class StreetsDialog extends JDialog {
     private DataStreets ds;
     public int Param=0;
     public Streets street;
-    public JTextField str_txt = new JTextField(35);
+    public JTextField str_txt;
+    public JTextField prim_txt;
+    public Integer Srow=0;
 
     public StreetsDialog(){
     }
@@ -34,7 +36,8 @@ public class StreetsDialog extends JDialog {
         JLabel l1 = new JLabel("Название улицы : ");
         JLabel l2 = new JLabel("Примечание : ");
 
-        final JTextField prim_txt = new JTextField(35);
+        str_txt = new JTextField(35);
+        prim_txt = new JTextField(35);
 
         JButton bb = new JButton("real");
         bb.addActionListener(new ActionListener() {
@@ -82,11 +85,10 @@ public class StreetsDialog extends JDialog {
                     } catch (SQLException e1) {
                         e1.printStackTrace();
                     }
-
                 }
                 if(Param==2){
                     try {
-                        street.setName(str_txt.getText());
+                        street.setName(str_txt.getText());street.setPrim(prim_txt.getText());
                         Factory.getInstance().getStreetsDao().updateStreet(street);
                     } catch (SQLException e1) {
                         e1.printStackTrace();
@@ -95,6 +97,7 @@ public class StreetsDialog extends JDialog {
             setVisible(false);
             ds.tt.setModel(ds.GetData());
             ds.SetSizeColumns();
+            ds.tt.setRowSelectionInterval(0,Srow);
             }
         });
         panel.add(save ,c);
@@ -105,20 +108,11 @@ public class StreetsDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
                 ds.tt.setModel(ds.GetData());ds.SetSizeColumns();
+                ds.tt.setRowSelectionInterval(0,Srow);
             }
         });
         panel.add(ex, c);
 
-
-
         add(panel, BorderLayout.NORTH);
-
-
-
-
-        //add(l1,new GridBagConstraints(0,0,0,0,1,1,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(2, 2, 1, 1),0,0));add(str_txt,new GridBagConstraints(1,0,2,0,1,1,GridBagConstraints.NORTH,GridBagConstraints.HORIZONTAL,new Insets(0, 2, 2, 2),0,0));
-       // add(l2,new GridBagConstraints(0,1,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(2, 2, 2, 2),0,0));add(prim_txt,new GridBagConstraints(1,1,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(2, 2, 2, 2),0,0));
-        //add(bb,new GridBagConstraints(0,2,1,1,1,1,GridBagConstraints.WEST,GridBagConstraints.HORIZONTAL,new Insets(2, 2, 2, 2),0,0));
-        //*************************************************//
     }
 }

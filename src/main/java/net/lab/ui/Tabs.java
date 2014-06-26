@@ -22,6 +22,13 @@ public class Tabs extends JTabbedPane {
             {
                 addTab(s, new DataStreets(s));
                 setTabComponentAt(count, new MainTab(s));
+                setSelectedIndex(count);
+                count++;
+            }
+            else {
+                addTab(s,new JPanel());
+                setTabComponentAt(count, new MainTab(s));
+                setSelectedIndex(count);
                 count++;
             }
         }

@@ -24,6 +24,11 @@ public class DataStreets extends JPanel {
     public DataStreets dds = null;
     public  int selectedRow=0;
 
+    private JButton b_add;
+    private JButton b_del;
+    private JButton b_izm;
+
+
     public DataStreets(String ss){
         name=ss;
         setLayout(new BorderLayout());
@@ -51,13 +56,12 @@ public class DataStreets extends JPanel {
         b.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                tt.setModel(GetData());
-                SetSizeColumns();
-                //Tabs.getInstance().DelTab(name);
+                Tabs.getInstance().DelTab(name);
             }
         });
         //*********************************//
         add(b, BorderLayout.SOUTH);
+        InitMenu();
         tt.requestFocusInWindow();
     }
 
@@ -83,28 +87,41 @@ public class DataStreets extends JPanel {
         typeColumn.setMaxWidth(900); typeColumn.setMinWidth(500);
         typeColumn = tcm.getColumn(2);
         typeColumn.setMaxWidth(350); typeColumn.setMinWidth(100);
+
+        if(tt.getModel().getRowCount()==0){
+            b_del.setEnabled(false);
+            b_izm.setEnabled(false);
+        }
+        else{
+            b_del.setEnabled(true);
+            b_izm.setEnabled(true);
+        }
     }
 
     public void SetButtons(){
         JPanel p_b = new JPanel();
         p_b.setLayout(new GridLayout());
-        JButton b_add = new JButton("Добавить запись");
-        JButton b_del = new JButton("Удалить запись");
-        JButton b_izm = new JButton("Изменить запись");
+        b_add = new JButton("Добавить запись");
+        b_del = new JButton("Удалить запись");
+        b_izm = new JButton("Изменить запись");
 
         b_del.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(tt.getModel().getValueAt(selectedRow, 0));
-                Integer ff = (Integer)tt.getModel().getValueAt(selectedRow,0);
+                Streets st1 = new Streets();
+                st1.setId((Integer)tt.getModel().getValueAt(selectedRow,0));
+                st1.setName((String) tt.getModel().getValueAt(selectedRow, 1));
+                st1.setPrim((String) tt.getModel().getValueAt(selectedRow, 2));
                 try {
-                    Streets st = Factory.getInstance().getStreetsDao().getStreetById(ff);
-                    Factory.getInstance().getStreetsDao().delStreet(st);
+                    Factory.getInstance().getStreetsDao().delStreet(st1);
                     tt.setModel(GetData());
                     SetSizeColumns();
-
                 } catch (SQLException e1) {
                     e1.printStackTrace();
+                }
+                if(tt.getModel().getRowCount()!=0)
+                {
+                    tt.setRowSelectionInterval(0, 0);
                 }
             }
         });
@@ -115,7 +132,7 @@ public class DataStreets extends JPanel {
                 double f = getBounds().getCenterX();
                 int x = (getWidth()/2)-150;	int y = (getHeight()/2)-25;
                 StreetsDialog sd = new StreetsDialog(x,y,520,130,"Добавить запись",dds);
-                sd.Param = 1;
+                sd.Param = 1;    sd.Srow = selectedRow;
                 sd.setModal(true); sd.setVisible(true);
 
             }
@@ -124,23 +141,83 @@ public class DataStreets extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double f = getBounds().getCenterX();
-                int x = (getWidth()/2)-150;
-                int y = (getHeight()/2)-25;
+                int x = (getWidth() / 2) - 150;
+                int y = (getHeight() / 2) - 25;
+                StreetsDialog sd = new StreetsDialog(x, y, 520, 130, "Изменить запись", dds);
+                Streets st1 = new Streets();
+                st1.setId((Integer) tt.getModel().getValueAt(selectedRow, 0));
+                st1.setName((String) tt.getModel().getValueAt(selectedRow, 1));
+                st1.setPrim((String) tt.getModel().getValueAt(selectedRow, 2));
+
+                sd.Param = 2;
+                sd.street = st1;
+                sd.str_txt.setText(st1.getName());
+                sd.prim_txt.setText(st1.getPrim());
+                sd.Srow = selectedRow;
+                sd.setModal(true);
+                sd.setVisible(true);
+            }
+        });
+        p_b.add(b_add);p_b.add(b_izm);p_b.add(b_del);
+        add(p_b, BorderLayout.NORTH);
+    }
+
+    public void InitMenu() {
+        JPopupMenu poupmenu = new JPopupMenu();
+        JMenuItem jMenuItem_A = new JMenuItem("Добавить запись");
+        JMenuItem jMenuItem_I = new JMenuItem("Изменить запись");
+        JMenuItem jMenuItem_D = new JMenuItem("Удалить запись");
+        poupmenu.add(jMenuItem_A);poupmenu.add(jMenuItem_I);poupmenu.add(jMenuItem_D);
+        //***********************************************//
+        jMenuItem_A.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double f = getBounds().getCenterX();
+                int x = (getWidth()/2)-150;	int y = (getHeight()/2)-25;
                 StreetsDialog sd = new StreetsDialog(x,y,520,130,"Добавить запись",dds);
+                sd.Param = 1;    sd.Srow = selectedRow; sd.setModal(true); sd.setVisible(true);
+            }
+        });
+        //***********************************************//
+        jMenuItem_I.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                double f = getBounds().getCenterX();
+                int x = (getWidth() / 2) - 150;
+                int y = (getHeight() / 2) - 25;
+                StreetsDialog sd = new StreetsDialog(x, y, 520, 130, "Изменить запись", dds);
+                Streets st1 = new Streets();
+                st1.setId((Integer) tt.getModel().getValueAt(selectedRow, 0));
+                st1.setName((String) tt.getModel().getValueAt(selectedRow, 1));
+                st1.setPrim((String) tt.getModel().getValueAt(selectedRow, 2));
+
+                sd.Param = 2; sd.street = st1;
+                sd.str_txt.setText(st1.getName()); sd.prim_txt.setText(st1.getPrim());
+                sd.Srow = selectedRow; sd.setModal(true); sd.setVisible(true);
+            }
+        });
+        //***********************************************//
+        jMenuItem_D.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 Streets st1 = new Streets();
                 st1.setId((Integer)tt.getModel().getValueAt(selectedRow,0));
                 st1.setName((String) tt.getModel().getValueAt(selectedRow, 1));
                 st1.setPrim((String) tt.getModel().getValueAt(selectedRow, 2));
-
-                sd.Param = 2;sd.street = st1;sd.str_txt.setText(st1.getName());
-                sd.setModal(true);
-                sd.setVisible(true);
+                try {
+                    Factory.getInstance().getStreetsDao().delStreet(st1);
+                    tt.setModel(GetData());
+                    SetSizeColumns();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+                if(tt.getModel().getRowCount()!=0)
+                {
+                    tt.setRowSelectionInterval(0, 0);
+                }
             }
-});
-
-        p_b.add(b_add);p_b.add(b_izm);p_b.add(b_del);
-        add(p_b,BorderLayout.NORTH);
-
-
+        });
+        //***********************************************//
+        tt.setComponentPopupMenu(poupmenu);
     }
 }

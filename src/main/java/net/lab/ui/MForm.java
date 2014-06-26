@@ -43,7 +43,9 @@ public MForm(){
         JMenu menuopt = new JMenu("Настройки");
         JMenu menuhelp = new JMenu("Помощь");
 
+        JMenuItem users = new JMenuItem("Пользователи");
         JMenuItem options = new JMenuItem("Прочитать файл настроек");
+
         JMenuItem help = new JMenuItem("О программе");
 
         JMenuItem mitem = new JMenuItem("Справочник 'Улицы'");
@@ -61,12 +63,22 @@ public MForm(){
             public void actionPerformed(ActionEvent e) {
                 Tabs tab = Tabs.getInstance();
                 add(tab,BorderLayout.CENTER);
-                tab.NewTab("Улицы  ",0);
+                tab.NewTab("Улицы  ", 0);
+            }
+        });
+        //***********************************************//
+        options.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Tabs tab = Tabs.getInstance();
+                add(tab,BorderLayout.CENTER);
+                tab.NewTab("Настройки  ", 1);
             }
         });
         //***********************************************//
         menu.add(mitem);
         menu.add(mitem1);
+        menuopt.add(users);
         menuopt.add(options);
         menuhelp.add(help);
         mbar.add(menu);
